@@ -50,6 +50,6 @@ go build -o CVEDetailScrapper ./main.go
 ```
 
 ## Todo & Possible Improvements
-- [ ] Create release versions for different operating systems
+- [x] Create release versions for different operating systems
 - [ ] Add more advanced filtering capabilities
 - [ ] Enable arguments to be passed to the script

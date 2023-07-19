@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -43,16 +44,19 @@ func main() {
 	fmt.Print("Enter the year you're trying to scrap for: ")
 	_, err := fmt.Scanln(&year)
 	if err != nil {
+		fmt.Println("Please enter a number for the year.")
 		return
 	}
 	fmt.Print("Enter the start page number: ")
 	_, err = fmt.Scanln(&startPage)
 	if err != nil {
+		fmt.Println("Please enter a number for the start page.")
 		return
 	}
 	fmt.Print("Enter the end page number: ")
 	_, err = fmt.Scanln(&endPage)
 	if err != nil {
+		fmt.Println("Please enter a number for the end page.")
 		return
 	}
 
@@ -149,6 +153,13 @@ func main() {
 	var fileName string
 	fmt.Print("Enter the file name (default: vulnerabilities.csv[.xlsx]): ")
 	_, err = fmt.Scanln(&fileName)
+
+	// Validates filename
+	if !isValidFilename(fileName) {
+		fmt.Printf("Filename '%s' is invalid.\n"+
+			"The filename should be alhpanueric characters only. e.g. MyFileName.csv", fileName)
+		return
+	}
 
 	// Export the data based on the chosen format
 	switch strings.ToLower(exportFormat) {
@@ -249,4 +260,20 @@ func exportXLSX(vulnerabilities []Vulnerability, filename string) {
 	}
 
 	fmt.Printf("Data exported to %s\n", filename)
+}
+
+func isValidFilename(filename string) bool {
+	// Regex for whitelisted characters: alphanumeric, _,- and .
+	allowedPattern := `^[a-zA-Z0-9_]+([-_][a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+)?$`
+
+	// Compile the regular expression.
+	regex, err := regexp.Compile(allowedPattern)
+	if err != nil {
+		// Handle any errors in regex compilation
+		fmt.Println("Error compiling regex:", err)
+		return false
+	}
+
+	// Check if the filename matches the allowed pattern.
+	return regex.MatchString(filename)
 }

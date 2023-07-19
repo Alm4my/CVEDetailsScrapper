@@ -262,7 +262,10 @@ func exportXLSX(vulnerabilities []Vulnerability, filename string) {
 	fmt.Printf("Data exported to %s\n", filename)
 }
 
-func isValidFilename(filename string) bool {
+func isValidFilename(fileName string) bool {
+	if fileName == "" {
+		return true
+	}
 	// Regex for whitelisted characters: alphanumeric, _,- and .
 	allowedPattern := `^[a-zA-Z0-9_]+([-_][a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+)?$`
 
@@ -275,5 +278,5 @@ func isValidFilename(filename string) bool {
 	}
 
 	// Check if the filename matches the allowed pattern.
-	return regex.MatchString(filename)
+	return regex.MatchString(fileName)
 }
